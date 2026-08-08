@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aditya Codex</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+:root{--cyan:#00ffff;--purple:#8b00ff;--bg:#04040b}
+body{
+font-family:'Orbitron',sans-serif;background:var(--bg);color:#fff;
+overflow-x:hidden;cursor:none;
+}
+body::before{
+content:"";position:fixed;inset:0;z-index:-5;
+background:
+radial-gradient(circle at 15% 20%,#7800ff35,transparent 30%),
+radial-gradient(circle at 85% 80%,#00ffff25,transparent 30%),
+radial-gradient(circle at 50% 50%,#ff00aa10,transparent 40%);
+animation:aurora 10s ease-in-out infinite alternate;
+}
+@keyframes aurora{0%{filter:hue-rotate(0deg);transform:scale(1)}100%{filter:hue-rotate(45deg);transform:scale(1.12)}}
+
+body::after{
+content:"";position:fixed;inset:0;z-index:-4;pointer-events:none;
+background-image:linear-gradient(#00ffff0c 1px,transparent 1px),linear-gradient(90deg,#00ffff0c 1px,transparent 1px);
+background-size:50px 50px;animation:gridMove 7s linear infinite;
+}
+@keyframes gridMove{to{background-position:50px 50px}}
+
+#particles{position:fixed;inset:0;z-index:-2;pointer-events:none}
+.particle{position:absolute;width:3px;height:3px;background:var(--cyan);border-radius:50%;box-shadow:0 0 12px var(--cyan);animation:float linear infinite}
+@keyframes float{0%{transform:translateY(110vh) translateX(0);opacity:0}15%{opacity:1}100%{transform:translateY(-10vh) translateX(80px);opacity:0}}
+
+#cursorGlow{
+position:fixed;width:180px;height:180px;border-radius:50%;
+background:radial-gradient(circle,#00ffff20,transparent 65%);
+pointer-events:none;z-index:9998;transform:translate(-50%,-50%);
+mix-blend-mode:screen;
+}
+#cursorDot{position:fixed;width:7px;height:7px;background:#fff;border-radius:50%;box-shadow:0 0 15px cyan;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+
+#intro{
+position:fixed;inset:0;background:#020207;display:flex;align-items:center;justify-content:center;flex-direction:column;
+z-index:9990;transition:opacity 1s ease,visibility 1s ease;
+}
+#intro.hide{opacity:0;visibility:hidden}
+.welcome{
+font-size:clamp(25px,6vw,65px);color:var(--cyan);text-shadow:0 0 10px cyan,0 0 35px #00ffff88;
+text-align:center;animation:welcomePulse 2s ease-in-out infinite;
+}
+.welcome span{color:white}
+@keyframes welcomePulse{50%{transform:scale(1.04);opacity:1}}
+.intro-line{height:2px;background:cyan;box-shadow:0 0 15px cyan;margin-top:25px;animation:lineLoad 2.5s ease forwards}
+@keyframes lineLoad{from{width:0}to{width:min(500px,80%)}}
+
+nav{
+display:flex;justify-content:space-between;align-items:center;padding:20px 10%;
+background:#00000090;backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;
+border-bottom:1px solid #00ffff30;
+}
+.logo{font-size:28px;color:var(--cyan);font-weight:bold;text-shadow:0 0 15px cyan;animation:logoPulse 2s infinite}
+@keyframes logoPulse{50%{text-shadow:0 0 30px cyan}}
+nav ul{display:flex;list-style:none;gap:25px}
+nav ul li a{color:white;text-decoration:none;transition:.3s;position:relative}
+nav ul li a::after{content:"";position:absolute;left:0;bottom:-7px;width:0;height:2px;background:cyan;box-shadow:0 0 10px cyan;transition:.3s}
+nav ul li a:hover{color:cyan;text-shadow:0 0 10px cyan}
+nav ul li a:hover::after{width:100%}
+
+.hero{min-height:100vh;display:flex;justify-content:center;align-items:center;flex-direction:column;text-align:center;padding:20px;position:relative}
+.hero h1{
+font-size:clamp(42px,8vw,72px);color:cyan;text-shadow:0 0 20px cyan;
+animation:titleFloat 3s ease-in-out infinite;
+position:relative;
+}
+.hero h1::before,.hero h1::after{
+content:"ADITYA CODEX";position:absolute;inset:0;opacity:0;
+}
+.hero h1::before{color:#ff00aa;animation:glitch 4s infinite}
+.hero h1::after{color:#00ff88;animation:glitch 4s .12s infinite}
+@keyframes titleFloat{50%{transform:translateY(-8px)}}
+@keyframes glitch{
+0%,88%,100%{opacity:0;transform:none}
+90%{opacity:.7;transform:translate(4px,-2px)}
+92%{opacity:.5;transform:translate(-4px,2px)}
+94%{opacity:0}
+}
+.hero h2{margin-top:12px;font-size:clamp(18px,4vw,30px)}
+.typing{color:cyan;min-height:35px;margin-top:12px}
+.hero p{margin-top:20px;max-width:750px;line-height:1.8;color:#ccc}
+.btn{
+margin-top:30px;padding:15px 40px;background:cyan;color:#000;font-weight:bold;text-decoration:none;border-radius:40px;
+transition:.3s;box-shadow:0 0 15px #00ffff88;cursor:none;position:relative;overflow:hidden;
+}
+.btn:hover{transform:scale(1.08);box-shadow:0 0 40px cyan}
+.btn::after{
+content:"";position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;opacity:0;
+transform:scale(1);pointer-events:none;
+}
+.btn:active::after{animation:ripple .6s}
+@keyframes ripple{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(15)}}
+
+section{padding:90px 10%}
+.title{text-align:center;font-size:40px;color:cyan;margin-bottom:50px;text-shadow:0 0 15px cyan}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px}
+.card{
+background:linear-gradient(145deg,#111122dd,#080812dd);padding:30px;border-radius:18px;
+transition:transform .15s ease,box-shadow .3s; border:1px solid #00ffff55;opacity:0;transform:translateY(45px);
+position:relative;overflow:hidden;transform-style:preserve-3d;
+}
+.card::before{
+content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,#00ffff20 50%,transparent 70%);
+transform:translateX(-120%);transition:.6s;
+}
+.card:hover::before{transform:translateX(120%)}
+.card:hover{box-shadow:0 0 30px #00ffff70;border-color:cyan}
+.card.show{opacity:1;transform:translateY(0)}
+.card h3{margin-bottom:15px;color:cyan;text-shadow:0 0 10px #00ffff88}
+.card p{color:#ddd;line-height:1.7}
+.hud{
+position:absolute;top:12px;right:14px;font-size:9px;color:#00ff88;letter-spacing:1px;
+}
+.scan{
+position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,cyan,transparent);
+box-shadow:0 0 12px cyan;animation:scan 3s linear infinite;opacity:.6;
+}
+@keyframes scan{from{top:0}to{top:100%}}
+
+.about{text-align:center;line-height:2;font-size:18px;background:#0b0b18aa;padding:35px;border:1px solid #00ffff33;border-radius:20px}
+.about p{margin:8px 0}
+footer{text-align:center;padding:30px;background:#000;margin-top:50px}
+footer span{color:cyan}
+.reveal{opacity:0;transform:translateY(50px);transition:1s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+#loader{
+position:fixed;inset:0;background:#030308f7;backdrop-filter:blur(12px);z-index:5000;
+display:none;align-items:center;justify-content:center;flex-direction:column;
+}
+.loader-title{font-size:clamp(24px,5vw,40px);color:cyan;text-shadow:0 0 20px cyan;text-align:center}
+.percent{font-size:60px;font-weight:bold;margin:20px;text-shadow:0 0 20px cyan}
+.progress-box{width:min(600px,80%);height:12px;border:1px solid cyan;border-radius:20px;overflow:hidden;box-shadow:0 0 20px #00ffff55}
+.progress{width:0;height:100%;background:cyan;box-shadow:0 0 20px cyan;transition:width .04s linear}
+.loading-text{margin-top:20px;color:#aaa}
+.status{margin-top:18px;color:#00ff88;font-size:12px;letter-spacing:2px;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.3}}
+
+@media(max-width:700px){
+nav{padding:18px 5%}.logo{font-size:20px}nav ul{gap:12px;font-size:12px}
+.title{font-size:30px}.card{padding:25px}body{cursor:auto}#cursorGlow,#cursorDot{display:none}
+}
+</style>
+</head>
+
+<body>
+
+<div id="particles"></div>
+<div id="cursorGlow"></div>
+<div id="cursorDot"></div>
+
+<div id="intro">
+<div class="welcome">WELCOME TO THE <span>WORLD OF AURA</span></div>
+<div class="intro-line"></div>
+</div>
+
+<div id="loader">
+<div class="loader-title">INITIALIZING AURA CODEX</div>
+<div class="percent" id="percent">0%</div>
+<div class="progress-box"><div class="progress" id="progress"></div></div>
+<div class="status" id="status">CONNECTING TO AURA CORE...</div>
+<div class="loading-text">Loading digital experience...</div>
+</div>
+
+<nav>
+<div class="logo">ADITYA CODEX</div>
+<ul>
+<li><a href="#">Home</a></li>
+<li><a href="#skills">Skills</a></li>
+<li><a href="#about">About</a></li>
+</ul>
+</nav>
+
+<div class="hero">
+<h1>ADITYA CODEX</h1>
+<h2><span id="typing"></span></h2>
+<p>Welcome to Aditya Codex — where coding, creativity and gaming-inspired design come together to create a futuristic digital experience.</p>
+<a class="btn" id="exploreBtn">EXPLORE</a>
+</div>
+
+<section id="skills" class="reveal">
+<h2 class="title">WHAT I DO</h2>
+<div class="cards">
+
+<div class="card tilt">
+<div class="hud">ONLINE</div><div class="scan"></div>
+<h3>💻 Developer</h3>
+<p>Python Development • Discord Bot Development • Website Hosting</p>
+</div>
+
+<div class="card tilt">
+<div class="hud">CREATIVE</div><div class="scan"></div>
+<h3>🎬 Editor</h3>
+<p>Medium Level Video Editor with a passion for creating clean and engaging video content.</p>
+</div>
+
+<div class="card tilt">
+<div class="hud">ACTIVE</div><div class="scan"></div>
+<h3>🌐 Website / Discord Bot Hosting</h3>
+<p>Hosting solutions for websites and Discord bots with a focus on reliable and smooth performance.</p>
+</div>
+
+</div>
+</section>
+
+<section id="about" class="reveal">
+<h2 class="title">ABOUT ME</h2>
+<div class="about">
+<p><b>Name:</b> Aditya</p>
+<p><b>Brand:</b> Aditya Codex</p>
+<p><b>Address:</b> Sheohar, Bihar, India</p>
+<p>I enjoy creating Python projects, Discord bots, websites, video edits and futuristic digital experiences.</p>
+</div>
+</section>
+
+<footer>Made with ❤️ by <span>Aditya</span><br><br>© 2026 Aditya Codex. All Rights Reserved.</footer>
+
+<script>
+/* Welcome */
+setTimeout(()=>document.getElementById("intro").classList.add("hide"),3000);
+
+/* Particles */
+const particleBox=document.getElementById("particles");
+for(let i=0;i<65;i++){
+const p=document.createElement("div");
+p.className="particle";
+p.style.left=Math.random()*100+"%";
+p.style.animationDuration=(5+Math.random()*10)+"s";
+p.style.animationDelay=(-Math.random()*12)+"s";
+p.style.opacity=Math.random();
+particleBox.appendChild(p);
+}
+
+/* Mouse glow */
+const glow=document.getElementById("cursorGlow");
+const dot=document.getElementById("cursorDot");
+document.addEventListener("mousemove",e=>{
+glow.style.left=e.clientX+"px";glow.style.top=e.clientY+"px";
+dot.style.left=e.clientX+"px";dot.style.top=e.clientY+"px";
+});
+
+/* Typing */
+const words=["DEVELOPER","EDITOR","CREATOR","PYTHON DEVELOPER","DISCORD BOT BUILDER"];
+let wi=0,ci=0,deleting=false;
+function type(){
+const text=words[wi];
+document.getElementById("typing").textContent=text.slice(0,ci);
+if(!deleting){
+ci++;
+if(ci>text.length){deleting=true;setTimeout(type,1100);return}
+}else{
+ci--;
+if(ci===0){deleting=false;wi=(wi+1)%words.length}
+}
+setTimeout(type,deleting?45:90);
+}
+type();
+
+/* Explore loading */
+document.getElementById("exploreBtn").addEventListener("click",function(e){
+e.preventDefault();
+const loader=document.getElementById("loader");
+const percent=document.getElementById("percent");
+const progress=document.getElementById("progress");
+const status=document.getElementById("status");
+this.classList.add("loading");loader.style.display="flex";
+let value=0;
+const messages=[
+"CONNECTING TO AURA CORE...",
+"LOADING PYTHON MODULES...",
+"SYNCING DISCORD SYSTEMS...",
+"STARTING WEB ENGINE...",
+"CALIBRATING CREATIVE MODE...",
+"AURA CORE ONLINE!"
+];
+const interval=setInterval(()=>{
+value++;
+percent.textContent=value+"%";progress.style.width=value+"%";
+if(value%17===0)status.textContent=messages[Math.min(Math.floor(value/17),messages.length-1)];
+if(value>=100){
+clearInterval(interval);
+setTimeout(()=>{
+loader.style.display="none";this.classList.remove("loading");
+document.getElementById("skills").scrollIntoView({behavior:"smooth"});
+document.querySelectorAll(".card").forEach((card,index)=>setTimeout(()=>card.classList.add("show"),index*180));
+},600);
+}
+},25);
+});
+
+/* Scroll reveal */
+const observer=new IntersectionObserver(entries=>{
+entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add("visible")});
+},{threshold:.15});
+document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+
+/* 3D card tilt */
+document.querySelectorAll(".tilt").forEach(card=>{
+card.addEventListener("mousemove",e=>{
+const r=card.getBoundingClientRect();
+const x=e.clientX-r.left,y=e.clientY-r.top;
+const rotateX=((y/r.height)-.5)*-12;
+const rotateY=((x/r.width)-.5)*12;
+card.style.transform=`perspective(700px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.02)`;
+});
+card.addEventListener("mouseleave",()=>card.style.transform="");
+});
+
+/* Ripple reset */
+document.getElementById("exploreBtn").addEventListener("click",()=>{
+document.getElementById("exploreBtn").style.animation="pulseBtn .7s";
+setTimeout(()=>document.getElementById("exploreBtn").style.animation="",700);
+});
+</script>
+
+<style>
+@keyframes pulseBtn{50%{box-shadow:0 0 60px cyan,0 0 100px #8b00ff88}}
+</style>
+
+</body>
+</html>
